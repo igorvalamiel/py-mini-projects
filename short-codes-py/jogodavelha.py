@@ -3,6 +3,47 @@ from time import sleep
 
 def line():
     print('=================================================')
+
+def check_win():
+    global game_list, player, bot
+    gl = game_list[:]
+    winner = 0
+    num_list = list(range(0, 9))
+
+    #horizontal
+    for i in num_list[::3]:
+        if gl[i] == gl[i+1] == gl[i+2]:
+            winner = gl[i]
+    
+    #vertical
+    for j in num_list[:3]:
+        if gl[j] == gl[j+3] == gl[j+6]:
+            winner = gl[j]
+    
+    #diagonal
+    if gl[0] == gl[4] == gl[8] or gl[2] == gl[4] == gl[6]:
+        winner = gl[4]
+
+    #retorno
+    if winner == player:
+        return [True, 'Player']
+    elif winner == bot:
+        return [True, 'Robô']
+    else:
+        return [False, 0]
+
+def player_time():
+    global game_list
+    pos = 0
+    while True:
+        pos = int(input('Escolha uma posição: ')) - 1
+        if type(game_list[pos]) == str:
+            print('Essa posição já está ocupada, tente novamente.')
+        else:
+            break
+    return pos
+
+
 #=======================================================================================================
 line()
 print('# JOGO DA VELHA #')
@@ -47,13 +88,22 @@ else:
     game_list[pos-1] = player
     vez = bot
 
-win = False
-while not win:
-    line()
+line()
+win = [False, 0]
+while not win[0]:
     print(game_list)
     if vez == bot:
+        line()
         print('Vez do robo')
-        break
+        vez = player
     elif vez == player:
-        print('Vez do jogador')
-        break
+        line()
+        pos = player_time()
+        game_list[pos] = player
+        vez = bot
+    win = check_win()
+
+if win[1] == 'Player':
+    print('Parabéns, você venceu!')
+else:
+    print('Você perdeu para um código... melhore.')
