@@ -32,6 +32,16 @@ def check_win():
     else:
         return [False, 0]
 
+def pick():
+    global game_list
+    gl = game_list[:]
+    pos = 0
+    while True:
+        pos = choice(range(9))
+        if type(gl[pos]) == int:
+            break
+    return pos
+
 def player_time():
     global game_list
     pos = 0
@@ -42,6 +52,36 @@ def player_time():
         else:
             break
     return pos
+
+def count_str(self):
+    num = 0
+    for k in self:
+        if type(k) == str:
+            num += 1
+    return num
+
+def find_int(self):
+    for i in self:
+        if type(i) == int:
+            return i-1
+
+def bot_time():
+    global game_list
+    wins = [[1,2,3], [4,5,6], [7,8,9], [1,4,7], [2,5,8], [3,6,9], [1,5,9], [3,5,7]]
+    for l in range(8):
+        for m in range(3):
+            pos = wins[l][m] - 1
+            wins[l][m] = game_list[pos]
+    
+    int_pos = 0
+    for n in wins:
+        num = count_str(n)
+        if num > 1:
+            int_pos = find_int(n)
+            break
+        else:
+            int_pos = pick()
+    return int_pos
 
 
 #=======================================================================================================
@@ -90,17 +130,26 @@ else:
 
 line()
 win = [False, 0]
+bot_count = 1
+player_count = 1
 while not win[0]:
     print(game_list)
     if vez == bot:
         line()
-        print('Vez do robo')
+        pos = 0
+        if bot_count == player_count == 1:
+            pos = pick()
+        else:
+            pos = bot_time()
+        game_list[pos] = bot
         vez = player
+        bot_count += 1
     elif vez == player:
         line()
         pos = player_time()
         game_list[pos] = player
         vez = bot
+        player_count += 1
     win = check_win()
 
 if win[1] == 'Player':
