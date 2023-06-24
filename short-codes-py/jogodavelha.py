@@ -26,8 +26,10 @@ def check_win():
 
     #retorno
     if winner == player:
+        tabela()
         return [True, 'Player']
     elif winner == bot:
+        tabela()
         return [True, 'Robô']
     else:
         return [False, 0]
@@ -92,6 +94,17 @@ def bot_time():
             int_pos = pick()
     return int_pos
 
+def tabela():
+    global game_list
+    gl = game_list[:]
+
+    print(f' {gl[0]} | {gl[1]} | {gl[2]}')
+    print('-----------')
+    print(f' {gl[3]} | {gl[4]} | {gl[5]}')
+    print('-----------')
+    print(f' {gl[6]} | {gl[7]} | {gl[8]}')
+
+
 #=======================================================================================================
 line()
 print('# JOGO DA VELHA #')
@@ -140,10 +153,13 @@ line()
 win = [False, 0]
 bot_count = 1
 player_count = 1
+quem_joga = init
 while not win[0]:
-    print(game_list)
+    print(f'Vez do {quem_joga}.')
+    tabela()
+    line()
     if vez == bot:
-        line()
+        quem_joga = 'Robô'
         pos = 0
         if bot_count == player_count == 1:
             pos = int(pick())
@@ -153,7 +169,7 @@ while not win[0]:
         vez = player
         bot_count += 1
     elif vez == player:
-        line()
+        quem_joga = 'Jogador'
         pos = player_time()
         game_list[pos] = player
         vez = bot
