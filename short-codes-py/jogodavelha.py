@@ -55,15 +55,21 @@ def player_time():
 
 def count_str(self):
     num = 0
-    for k in self:
+    for i, k in enumerate(self):
+        pos_list = []
         if type(k) == str:
             num += 1
-    return num
+            if num == 2:
+                pos_list.append(i)
+    try:
+        return int(num), pos_list[0], pos_list[1]
+    except:
+        return int(num), 0, 1
 
 def find_int(self):
     for i in self:
         if type(i) == int:
-            return i-1
+            return int(i-1)
 
 def bot_time():
     global game_list
@@ -75,14 +81,16 @@ def bot_time():
     
     int_pos = 0
     for n in wins:
-        num = count_str(n)
+        num, p1, p2 = count_str(n)
         if num > 1:
-            int_pos = find_int(n)
-            break
+            if p1 == p2:
+                int_pos = int(find_int(n))
+                break
+            else:
+                int_pos = pick()
         else:
             int_pos = pick()
     return int_pos
-
 
 #=======================================================================================================
 line()
@@ -138,9 +146,9 @@ while not win[0]:
         line()
         pos = 0
         if bot_count == player_count == 1:
-            pos = pick()
+            pos = int(pick())
         else:
-            pos = bot_time()
+            pos = int(bot_time())
         game_list[pos] = bot
         vez = player
         bot_count += 1
